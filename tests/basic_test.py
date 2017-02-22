@@ -7,11 +7,10 @@ class TestSimpleCase(unittest.TestCase):
     """
     TestSimpleCase will assert that most simple test work
     """
-    def empty_test(self):
+    def test_empty(self):
         """
         Verify that the Environment working
         """
+        print("Basic test")
         self.assertEqual("toto", "toto")
 
-if __name__ == '__main__':
-    unittest.main()
