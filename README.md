@@ -6,8 +6,8 @@ This project use :
 
 * python3
 * pip
-* virtualenv
-* virtualenvwrapper
+* [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/)
+* [virtualenvwrapper](http://docs.python-guide.org/en/latest/dev/virtualenvs/)
 
 Make sure you have this program installed and working
 
@@ -29,6 +29,7 @@ Then install the deps
 
 
     $> pip install <your_package>
+
 
 
 
