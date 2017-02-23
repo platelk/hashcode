@@ -23,17 +23,20 @@ Then install the deps
 
   $> pip install -r requirements.txt
 
+
 ### If you add a dependencices
 
-* First install the deps
+  * First install the deps
+
+  $> pip install <your_package>
+
+  * Then save it for the others
+
+  $> pip freeze > requirements.txt
 
 
-    $> pip install <your_package>
+## Run
 
+To run the app
 
-
-
-* Then save it for the others
-
-
-    $> pip freeze > requirements.txt
+  $> python app/main.py FILE1 FILE2 ...
