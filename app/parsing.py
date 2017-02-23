@@ -37,7 +37,9 @@ def parse_endpoints_and_cache_servers(lines, endpoints_count, cache_server_size)
         for i in range(0, int(endpoint_data[1])):
             cache_server_data = lines[line_counter].split(' ')
             new_cache_server = CacheServer(server_id=int(cache_server_data[0]), max_size=cache_server_size)
-            cache_servers[int(cache_server_data[0])] = new_cache_server
+            if new_cache_server.id not in cache_servers:
+                cache_servers[new_cache_server.id] = new_cache_server
+            cache_servers[new_cache_server.id].endpoints.append(new_endpoint)
             new_endpoint.cache_servers.append({'server': new_cache_server, 'latency': int(cache_server_data[1])})
             line_counter += 1
         endpoints.append(new_endpoint)

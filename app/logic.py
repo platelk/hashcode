@@ -8,11 +8,10 @@ import itertools
 import parsing
 import output
 
+
 def resolve(content: str) -> str:
     input_data = parsing.parse(content)
     calculate_output(input_data.endpoints)
-    # for _, cache_toi in input_data.cache_servers.items():
-    #     print(cache_toi.videos)
     return output.format_output(input_data.cache_servers)
 
 
