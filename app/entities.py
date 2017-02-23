@@ -12,8 +12,9 @@ class InputData:
 
 
 class Video:
-    def __init__(self, size=0):
+    def __init__(self, size=0, video_id=0):
         self.size = size
+        self.id = video_id
 
 
 class Endpoint:
@@ -32,13 +33,13 @@ class CacheServer:
         self.videos = []
         self.max_size = max_size
 
-    def add_video(video):
+    def add_video(self, video):
         self.videos.append(video)
         self.available_size -= video.size
 
 
 class Request:
-    def __init__(self, video_id, origin_endpoint, requests_sum):
-        self.video_id = video_id
+    def __init__(self, video, origin_endpoint, requests_sum):
+        self.video = video
         self.origin_endpoint = origin_endpoint
         self.requests_sum = requests_sum
