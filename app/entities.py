@@ -26,9 +26,13 @@ class Endpoint:
 class CacheServer:
     def __init__(self, server_id=0, max_size=0):
         self.id = server_id
-        self.available_size = 0
+        self.available_size = max_size
         self.videos = []
         self.max_size = max_size
+
+    def add_video(video):
+        self.videos.append(video)
+        self.available_size -= video.size
 
 
 class Request:
