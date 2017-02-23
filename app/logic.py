@@ -11,7 +11,8 @@ import output
 
 def resolve(content: str) -> str:
     input_data = parsing.parse(content)
-    calculate_output(input_data.endpoints)
+
+    calculate_output(input_data.endpoints, input_data.cache_servers)
     return output.format_output(input_data.cache_servers)
 
 
@@ -47,18 +48,19 @@ def calculate_one_endpoint_output(endpoint, optimize=False):
                     endpoint.requests.remove(r)
             break
 
-
 def calculate_one_output(endpoints, optimize=False):
     endpoints = sorted(endpoints, key=lambda e: sum([r.requests_sum for r in e.requests]))
+
     for endpoint in endpoints:
         calculate_one_endpoint_output(endpoint)
 
 
-def calculate_output(endpoints):
+def calculate_output(endpoints, caches):
     for e in endpoints:
         e.save_requests()
+
     for _ in itertools.count(1):
-        calculate_one_output(endpoints)
+        calculate_one_output(endpoints, caches)
         end = True
         for e in endpoints:
             if len(e.requests) > 0:
@@ -92,11 +94,9 @@ if __name__ == "__main__":
     es[0].cache_servers.append({"server": caches[1], "latency": 300})
     es[0].cache_servers.append({"server": caches[2], "latency": 200})
 
-    calculate_output(es)
-
-    calculate_output(es)
+    calculate_output(es, caches)
 
     for i, cache in enumerate(caches):
-        print("cache " + str(i))
+        print("cache " + str(i) + " | used " + str(cache.max_size - cache.available_size) + " / " + str(cache.max_size))
         for v in cache.videos:
             print("\t" + str(v.id))
