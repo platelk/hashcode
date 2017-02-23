@@ -33,7 +33,7 @@ def calculate_one_output(endpoints):
         videos = OrderedDict(sorted(videos.items(),key=lambda x: x[1])[::-1])
         select_video = list(videos.keys())[0]
         for i, cache in enumerate(cache_servers):
-            if cache is None or cache.available_size > select_video.size:
+            if cache is None or cache.available_size >= select_video.size:
                 if cache is not None:
                     cache.add_video(select_video)
                 for i, r in enumerate(endpoint.requests):
