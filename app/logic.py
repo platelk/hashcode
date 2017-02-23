@@ -60,7 +60,7 @@ def calculate_output(endpoints, caches):
         e.save_requests()
 
     for _ in itertools.count(1):
-        calculate_one_output(endpoints, caches)
+        calculate_one_output(endpoints)
         end = True
         for e in endpoints:
             if len(e.requests) > 0:
