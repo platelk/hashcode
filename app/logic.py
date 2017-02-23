@@ -7,9 +7,12 @@ import itertools
 
 import parsing
 
+
 def resolve(content: str) -> str:
     input_data = parsing.parse(content)
-    print(input_data)
+    calculate_output(input_data.endpoints)
+    for _, cache_toi in input_data.cache_servers.items():
+        print(cache_toi.videos)
     return "nothing"
 
 
@@ -17,9 +20,8 @@ def calculate_one_output(endpoints):
     for endpoint in endpoints:
         cache_servers = endpoint.cache_servers[::]
         cache_servers.append({"server": None, "latency": endpoint.latency})
-        cache_servers = sorted(endpoint.cache_servers, key=lambda x: x["latency"])
+        cache_servers = sorted(cache_servers, key=lambda x: x["latency"])
         cache_servers = [c["server"] for c in cache_servers]
-
         temp_videos = [list(g) for k, g in itertools.groupby(endpoint.requests, key=lambda r: r.video.id)]
         videos = {}
         for v in temp_videos:
@@ -31,19 +33,20 @@ def calculate_one_output(endpoints):
         videos = OrderedDict(sorted(videos.items(),key=lambda x: x[1])[::-1])
         select_video = list(videos.keys())[0]
         for i, cache in enumerate(cache_servers):
-            if cache.available_size > select_video.size or cache is None:
+            if cache is None or cache.available_size >= select_video.size:
                 if cache is not None:
                     cache.add_video(select_video)
                 for i, r in enumerate(endpoint.requests):
                     if r.video.id == select_video.id:
                         endpoint.requests.remove(r)
-                break 
+                break
+
 
 def calculate_output(endpoints):
-    for i in itertools.count(1):
-        calculate_one_output(es)
+    for _ in itertools.count(1):
+        calculate_one_output(endpoints)
         end = True
-        for e in es:
+        for e in endpoints:
             if len(e.requests) > 0:
                 end = False
                 break
@@ -54,7 +57,7 @@ def calculate_output(endpoints):
 
 if __name__ == "__main__":
     es = [Endpoint(600), Endpoint(900), Endpoint(700)]
- 
+
     caches = [CacheServer(1, 50000), CacheServer(2, 65000)]
 
     videos = [Video(50, 1), Video(100, 2), Video(200, 3)]
