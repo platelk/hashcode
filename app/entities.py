@@ -26,7 +26,7 @@ class Endpoint:
 class CacheServer:
     def __init__(self, server_id=0, max_size=0):
         self.id = server_id
-        self.size = 0
+        self.available_size = 0
         self.videos = []
         self.max_size = max_size
 
