@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 def get_used_caches_count(cache_list):
     caches_used = 0
 
