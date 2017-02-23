@@ -26,11 +26,13 @@ def parse_argument():
 
     return parser.parse_args()
 
+
 def set_logger(level: str) -> None:
     numeric_level = getattr(logging, level.upper(), None)
     if not isinstance(numeric_level, int):
         raise ValueError('Invalid log level: %s' % level)
     logging.basicConfig(level=numeric_level)
+
 
 def get_input_files(files: list, directory: str) -> list:
     if directory is not None:
@@ -42,6 +44,7 @@ def get_input_files(files: list, directory: str) -> list:
             del files[i]
     return files
 
+
 def get_output_dir(path: str) -> str:
     if not os.path.exists(path):
         os.makedirs(path)
@@ -49,6 +52,7 @@ def get_output_dir(path: str) -> str:
         logging.critical("Specified output directory is not a directory")
         sys.exit(1)
     return path
+
 
 def main():
     """

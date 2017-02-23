@@ -3,6 +3,7 @@ Basic testing of the app
 """
 import unittest
 
+
 class TestSimpleCase(unittest.TestCase):
     """
     TestSimpleCase will assert that most simple test work
@@ -13,4 +14,3 @@ class TestSimpleCase(unittest.TestCase):
         """
         print("Basic test")
         self.assertEqual("toto", "toto")
-
