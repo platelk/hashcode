@@ -48,7 +48,6 @@ def parse_requests(lines, videos, endpoints):
     requests = []
     for line in lines:
         request_data = line.split(' ')
-        print('Read request: %s' % request_data)
         endpoint = endpoints[int(request_data[1])]
         new_request = Request(
             video=videos[int(request_data[0])],

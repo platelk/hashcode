@@ -33,7 +33,7 @@ class CacheServer:
         self.videos = []
         self.max_size = max_size
 
-    def add_video(video):
+    def add_video(self, video):
         self.videos.append(video)
         self.available_size -= video.size
 
