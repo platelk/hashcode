@@ -49,17 +49,18 @@ def calculate_one_endpoint_output(endpoint, optimize=False):
             break
 
 def calculate_one_output(endpoints, optimize=False):
-
     for endpoint in endpoints:
-        calculate_one_endpoint_output(endpoint, optimize)
-
+        if len(endpoint.requests) == 0:
+            continue
+        calculate_one_endpoint_output(endpoints[0], optimize)
+        return
 
 def calculate_output(endpoints, caches):
     for e in endpoints:
         e.save_requests()
 
     for _ in itertools.count(1):
-        endpoints = sorted(endpoints, key=lambda e: e.latency * sum([r.requests_sum for r in e.requests]))
+        endpoints = sorted(endpoints, key=lambda e: e.latency * sum([r.requests_sum for r in e.requests]))[::-1]
         calculate_one_output(endpoints)
         end = True
         for e in endpoints:
@@ -71,7 +72,6 @@ def calculate_output(endpoints, caches):
     for e in endpoints:
         e.restore()
     for _ in itertools.count(1):
-        calculate_one_output(endpoints, True)
         end = True
         for e in endpoints:
             if len(e.requests) > 0:
@@ -79,6 +79,9 @@ def calculate_output(endpoints, caches):
                 break
         if end is True:
             break
+        endpoints = sorted(endpoints, key=lambda e: e.latency * sum([r.requests_sum for r in e.requests]))[::-1]
+        calculate_one_output(endpoints, True)
+
 
 if __name__ == "__main__":
     es = [Endpoint(1000), Endpoint(500)]
