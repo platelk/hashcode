@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+
 """
 Entry point of the app
 """
+
 import argparse
 import logging
 import os
