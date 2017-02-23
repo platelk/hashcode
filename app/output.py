@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 def get_used_caches_count(cache_list):
     caches_used = 0
 
@@ -17,7 +18,7 @@ def format_output(cache_list):
         if cache.max_size != cache.available_size:
             output_str += str(cache.id)
 
-            for j, video in cache.videos.items():
+            for j, video in enumerate(cache.videos):
                 output_str += " " + str(video.id)
 
             output_str += "\n"
