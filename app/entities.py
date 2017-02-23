@@ -4,9 +4,10 @@ List entities returned by the parsing
 
 
 class InputData:
-    def __init__(self, videos, endpoints, requests):
+    def __init__(self, videos, endpoints, requests, cache_servers):
         self.videos = videos
         self.endpoints = endpoints
+        self.cache_servers = cache_servers
         self.requests = requests
 
 
@@ -19,12 +20,16 @@ class Endpoint:
     def __init__(self, latency=0):
         self.latency = latency
         self.cache_servers = []
+        self.requests = []
 
 
 class CacheServer:
-    def __init__(self, server_id=0, latency=0):
+    def __init__(self, server_id=0, latency=0, max_size=0):
         self.id = server_id
+        self.size = 0
+        self.videos = []
         self.latency = latency
+        self.max_size = max_size
 
 
 class Request:

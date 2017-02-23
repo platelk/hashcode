@@ -16,7 +16,11 @@ def parse_first_line(line):
     }
 
 
-# def parse_videos(lines):
+def parse_videos(lines):
+    robots = []
+    for line in lines:
+        pass
+
 
 
 
@@ -24,9 +28,10 @@ def parse(content):
     lines = content.split('\n')
     general_info = parse_first_line(lines[0])
     lines = lines[:-1]
-    # videos = parse_videos(lines[:general_info.get('videos_count')])
+    videos = parse_videos(lines[:general_info.get('videos_count')])
     return InputData(
         videos=videos,
         # endpoints=endpoints,
+        # cache_servers=cache_servers,
         # requests=requests
     )
