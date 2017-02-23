@@ -79,24 +79,25 @@ def calculate_output(endpoints):
         if end is True:
             break
 
-
 if __name__ == "__main__":
-    es = [Endpoint(600), Endpoint(900), Endpoint(700)]
+    es = [Endpoint(1000), Endpoint(500)]
 
-    caches = [CacheServer(1, 50000), CacheServer(2, 65000)]
+    caches = [CacheServer(1, 100), CacheServer(2, 100), CacheServer(3, 100)]
 
-    videos = [Video(50, 1), Video(100, 2), Video(200, 3)]
+    videos = [Video(50, 0), Video(50, 1), Video(80, 2), Video(80, 3), Video(110, 4)]
 
-    es[0].requests.extend([Request(videos[0], es[0], 500), Request(videos[0], es[0], 200)])
-    es[0].requests.extend([Request(videos[1], es[0], 300)])
+    es[0].requests.extend([Request(videos[2], es[0], 1500), Request(videos[3], es[0], 500), Request(videos[0], es[0], 1000)])
+    es[1].requests.extend([Request(videos[0], es[1], 1000)])
 
-    es[1].requests.extend([Request(videos[1], es[1], 300)])
+    es[0].cache_servers.append({"server": caches[0], "latency": 100})
+    es[0].cache_servers.append({"server": caches[1], "latency": 300})
+    es[0].cache_servers.append({"server": caches[2], "latency": 200})
 
-    es[0].cache_servers.append({"server": caches[0], "latency": 1000})
-    es[0].cache_servers.append({"server": caches[1], "latency": 500})
-    es[1].cache_servers.append({"server": caches[1], "latency": 800})
+    calculate_output(es)
 
     calculate_output(es)
 
     for i, cache in enumerate(caches):
-        print(cache.videos)
+        print("cache " + str(i))
+        for v in cache.videos:
+            print("\t" + str(v.id))
