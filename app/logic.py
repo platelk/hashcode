@@ -68,5 +68,7 @@ if __name__ == "__main__":
     es[0].cache_servers.append({"server": caches[1], "latency": 500})
     es[1].cache_servers.append({"server": caches[1], "latency": 800})
 
+    calculate_output(es)
+
     for i, cache in enumerate(caches):
         print(cache.videos)
