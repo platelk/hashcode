@@ -18,7 +18,9 @@ class Video:
 
 class Endpoint:
     def __init__(self, latency=0):
+        # Latency to datacenter
         self.latency = latency
+        # List of maps
         self.cache_servers = []
         self.requests = []
 
