@@ -16,30 +16,40 @@ def resolve(content: str) -> str:
     return output.format_output(input_data.cache_servers)
 
 
+def calculate_one_endpoint_output(endpoint):
+    cache_servers = endpoint.cache_servers[::]
+    cache_servers.append({"server": None, "latency": endpoint.latency})
+    cache_servers = sorted(cache_servers, key=lambda x: x["latency"])
+    cache_servers = [c["server"] for c in cache_servers]
+    temp_videos = [list(g) for k, g in itertools.groupby(endpoint.requests, key=lambda r: r.video.id)]
+    videos = {}
+    for v in temp_videos:
+        if v[0].video not in videos:
+            videos[v[0].video] = 0
+        videos[v[0].video] += sum([tmp.requests_sum for tmp in v])
+    if len(videos) == 0:
+        return
+    videos = OrderedDict(sorted(videos.items(),key=lambda x: x[1])[::-1])
+    select_video = list(videos.keys())[0]
+    for i, cache in enumerate(cache_servers):
+        if cache is not None and select_video in cache.videos:
+            for i, r in enumerate(endpoint.requests):
+                if r.video.id == select_video.id:
+                    endpoint.requests.remove(r)
+            return
+    for i, cache in enumerate(cache_servers):
+        if cache is None or cache.available_size >= select_video.size:
+            if cache is not None and select_video not in cache.videos:
+                cache.add_video(select_video)
+            for i, r in enumerate(endpoint.requests):
+                if r.video.id == select_video.id:
+                    endpoint.requests.remove(r)
+            return
+
+
 def calculate_one_output(endpoints):
     for endpoint in endpoints:
-        cache_servers = endpoint.cache_servers[::]
-        cache_servers.append({"server": None, "latency": endpoint.latency})
-        cache_servers = sorted(cache_servers, key=lambda x: x["latency"])
-        cache_servers = [c["server"] for c in cache_servers]
-        temp_videos = [list(g) for k, g in itertools.groupby(endpoint.requests, key=lambda r: r.video.id)]
-        videos = {}
-        for v in temp_videos:
-            if v[0].video not in videos:
-                videos[v[0].video] = 0
-            videos[v[0].video] += (v[0].video.size * sum([tmp.requests_sum for tmp in v]))
-        if len(videos) == 0:
-            continue
-        videos = OrderedDict(sorted(videos.items(),key=lambda x: x[1])[::-1])
-        select_video = list(videos.keys())[0]
-        for i, cache in enumerate(cache_servers):
-            if cache is None or cache.available_size >= select_video.size:
-                if cache is not None and select_video not in cache.videos:
-                    cache.add_video(select_video)
-                for i, r in enumerate(endpoint.requests):
-                    if r.video.id == select_video.id:
-                        endpoint.requests.remove(r)
-                break
+        calculate_one_endpoint_output(endpoint)
 
 
 def calculate_output(endpoints):
