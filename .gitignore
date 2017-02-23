@@ -93,3 +93,5 @@ ENV/
 .vscode
 
 out/
+
+myenv
