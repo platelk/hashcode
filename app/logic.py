@@ -55,7 +55,34 @@ def calculate_one_output(endpoints, optimize=False):
         calculate_one_endpoint_output(endpoints[0], optimize)
         return
 
+
+def check_common_endpoints(caches):
+    for i, cache in caches.items():
+        videos = {}
+        for endpoint in cache.endpoints:
+            for request in endpoint.requests:
+                if request.video.id not in videos:
+                    videos[request.video.id] = {
+                        'video': request.video,
+                        'count': 0
+                    }
+                videos[request.video.id]['count'] += 1
+        tamere = {
+            'count': 1,
+            'video': None
+        }
+        for i, video in videos.items():
+            if video.get('count') > tamere.get('count'):
+                tamere = {
+                    'count': video.get('count'),
+                    'video': video.get('video')
+                }
+        if tamere.get('count') > 1:
+            cache.add_video(tamere.get('video'))
+
 def calculate_output(endpoints, caches):
+    check_common_endpoints(caches)
+
     for e in endpoints:
         e.save_requests()
 
