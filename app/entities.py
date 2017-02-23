@@ -24,11 +24,10 @@ class Endpoint:
 
 
 class CacheServer:
-    def __init__(self, server_id=0, latency=0, max_size=0):
+    def __init__(self, server_id=0, max_size=0):
         self.id = server_id
         self.size = 0
         self.videos = []
-        self.latency = latency
         self.max_size = max_size
 
 

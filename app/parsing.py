@@ -17,9 +17,11 @@ def parse_first_line(line):
 
 
 def parse_videos(lines):
-    robots = []
+    videos = []
     for line in lines:
-        pass
+
+        videos.append()
+    return videos
 
 
 
