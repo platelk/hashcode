@@ -24,6 +24,13 @@ class Endpoint:
         # List of maps
         self.cache_servers = []
         self.requests = []
+        self._save_requests = []
+
+    def save_requests(self):
+        self._save_requests = self.requests[::]
+
+    def restore(self):
+        self.requests = self._save_requests
 
 
 class CacheServer:
