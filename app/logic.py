@@ -15,7 +15,7 @@ def resolve(content: str) -> str:
     return output.format_output(input_data.cache_servers)
 
 
-def calculate_one_endpoint_output(endpoint):
+def calculate_one_endpoint_output(endpoint, optimize=False):
     cache_servers = endpoint.cache_servers[::]
     cache_servers.append({"server": None, "latency": endpoint.latency})
     cache_servers = sorted(cache_servers, key=lambda x: x["latency"])
@@ -30,12 +30,14 @@ def calculate_one_endpoint_output(endpoint):
         return
     videos = OrderedDict(sorted(videos.items(),key=lambda x: x[1])[::-1])
     select_video = list(videos.keys())[0]
-    for i, cache in enumerate(cache_servers):
-        if cache is not None and select_video in cache.videos:
-            for i, r in enumerate(endpoint.requests):
-                if r.video.id == select_video.id:
-                    endpoint.requests.remove(r)
-            return
+
+    if optimize is False:
+        for i, cache in enumerate(cache_servers):
+            if cache is not None and select_video in cache.videos:
+                for i, r in enumerate(endpoint.requests):
+                    if r.video.id == select_video.id:
+                        endpoint.requests.remove(r)
+                return
     for i, cache in enumerate(cache_servers):
         if cache is None or cache.available_size >= select_video.size:
             if cache is not None and select_video not in cache.videos:
@@ -43,15 +45,18 @@ def calculate_one_endpoint_output(endpoint):
             for i, r in enumerate(endpoint.requests):
                 if r.video.id == select_video.id:
                     endpoint.requests.remove(r)
-            return
+            break
 
 
-def calculate_one_output(endpoints):
+def calculate_one_output(endpoints, optimize=False):
+    endpoints = sorted(endpoints, key=lambda e: sum([r.requests_sum for r in e.requests]))
     for endpoint in endpoints:
         calculate_one_endpoint_output(endpoint)
 
 
 def calculate_output(endpoints):
+    for e in endpoints:
+        e.save_requests()
     for _ in itertools.count(1):
         calculate_one_output(endpoints)
         end = True
@@ -61,8 +66,17 @@ def calculate_output(endpoints):
                 break
         if end is True:
             break
-
-
+    for e in endpoints:
+        e.restore()
+    for _ in itertools.count(1):
+        calculate_one_output(endpoints, True)
+        end = True
+        for e in endpoints:
+            if len(e.requests) > 0:
+                end = False
+                break
+        if end is True:
+            break
 
 if __name__ == "__main__":
     es = [Endpoint(1000), Endpoint(500)]
