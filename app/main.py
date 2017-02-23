@@ -6,6 +6,7 @@ Entry point of the app
 
 import argparse
 import logging
+import ntpath
 import os
 import sys
 import time
@@ -79,7 +80,7 @@ def main():
             elapse = time.time() - start_time
             logging.debug("    Resolved in %s", elapse)
 
-            output_file_path = output_dir + "/" + file_path + ".out"
+            output_file_path = output_dir + "/" + ntpath.basename(file_path) + ".out"
             with open(output_file_path, "w+") as output_file:
                 logging.debug("    write result in %s", output_file_path)
                 output_file.write(result)
