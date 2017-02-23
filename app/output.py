@@ -17,7 +17,7 @@ def format_output(cache_list):
         if cache.max_size != cache.available_size:
             output_str += str(cache.id)
 
-            for video in cache.video_list:
+            for video in cache.videos:
                 output_str += " " + str(video.id)
 
             output_str += "\n"
