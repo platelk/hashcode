@@ -31,13 +31,13 @@ def calculate_one_output(endpoints):
         videos = OrderedDict(sorted(videos.items(),key=lambda x: x[1])[::-1])
         select_video = list(videos.keys())[0]
         for i, cache in enumerate(cache_servers):
-            if cache.available_size > select_video.size or cache is None:
+            if cache.available_size >= select_video.size or cache is None:
                 if cache is not None:
                     cache.add_video(select_video)
                 for i, r in enumerate(endpoint.requests):
                     if r.video.id == select_video.id:
                         endpoint.requests.remove(r)
-                break 
+                break
 
 def calculate_output(endpoints):
     for i in itertools.count(1):
@@ -50,11 +50,11 @@ def calculate_output(endpoints):
         if end is True:
             break
 
-   
+
 
 if __name__ == "__main__":
     es = [Endpoint(600), Endpoint(900), Endpoint(700)]
- 
+
     caches = [CacheServer(1, 50000), CacheServer(2, 65000)]
 
     videos = [Video(50, 1), Video(100, 2), Video(200, 3)]
